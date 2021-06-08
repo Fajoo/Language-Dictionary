@@ -90,6 +90,7 @@
     <Compile Include="Services\FilesHelper.cs" />
     <Compile Include="ViewModels\Base\ViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\NewWordsViewModel.cs" />
     <Compile Include="Views\NewWordsWindow.xaml.cs">
       <DependentUpon>NewWordsWindow.xaml</DependentUpon>
     </Compile>
@@ -141,11 +142,16 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Img\study.gif" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Img\lan.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Sound\sound.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -61,7 +61,7 @@ namespace Language_Dictionary.ViewModels
         {
             while (true)
             {
-                for (var i = int.Parse(Settings.DelayMin) * 60; i >= 0; i--)
+                for (var i = int.Parse(Settings.DelayMin) * 5; i >= 0; i--)
                 {
                     if (_worker.CancellationPending)
                     {
@@ -73,7 +73,8 @@ namespace Language_Dictionary.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    new NewWordsWindow().ShowDialog();
+                    var window = new NewWordsWindow {DataContext = new NewWordsViewModel()};
+                    window.ShowDialog();
                 });
             }
         }

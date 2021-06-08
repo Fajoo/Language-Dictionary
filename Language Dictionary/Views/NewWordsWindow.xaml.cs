@@ -14,14 +14,8 @@ using System.Windows.Shapes;
 
 namespace Language_Dictionary.Views
 {
-    /// <summary>
-    /// Логика взаимодействия для NewWordsWindow.xaml
-    /// </summary>
-    public partial class NewWordsWindow : Window
+    public partial class NewWordsWindow
     {
-        public NewWordsWindow()
-        {
-            InitializeComponent();
-        }
+        public NewWordsWindow() => InitializeComponent();
     }
 }
