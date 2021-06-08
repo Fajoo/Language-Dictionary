@@ -52,11 +52,11 @@ namespace Language_Dictionary
 
         private void CreateNotIcon()
         {
-            _notifyIcon.Icon = new Icon("Resources/Img/lan.ico");
+            _notifyIcon.Icon = new Icon("Resources/Img/dictionary.ico");
             var contextMenuIcon = _notifyIcon.ContextMenuStrip = new Forms.ContextMenuStrip();
             _notifyIcon.Text = "Language Dictionary";
 
-            contextMenuIcon.Items.Add("Open", null, (obj, ev) => MainWindow.Show());
+            contextMenuIcon.Items.Add("Open Language Dictionary", new Bitmap("Resources/Img/dictionary.ico"), (obj, ev) => MainWindow.Show());
             contextMenuIcon.Items.Add("Quit", null, (obj, ev) => App.Current.Shutdown());
             _notifyIcon.Visible = true;
             _notifyIcon.MouseDoubleClick += NotifyIconOnMouseDoubleClick;

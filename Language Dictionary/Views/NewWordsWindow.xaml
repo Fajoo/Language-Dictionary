@@ -4,10 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:models="clr-namespace:Language_Dictionary.Models"
         Topmost="True"
+        FontFamily="Comic Sans MS"
+        Icon="../Resources/Img/dictionary.png"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize"
-        Title="NewWordsWindow" Height="500" Width="700" WindowStyle="None">
+        Title="Language Dictionary" Height="540" Width="700" WindowStyle="None">
     <hc:Window.Triggers>
         <EventTrigger RoutedEvent="hc:Window.Loaded">
             <SoundPlayerAction Source="../Resources/Sound/sound.wav"/>
@@ -67,17 +70,24 @@
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Margin="5,15"
                         Width="150"
+                        FontSize="14"
                         Style="{StaticResource ButtonSuccess}"
                         Command="{Binding StartCommand}"
                         Content="Let's start :)"/>
                 <Button Margin="5,15"
                         Width="150"
+                        FontSize="14"
                         Content="Want to skip :("
                         Command="SystemCommands.CloseWindowCommand"
                         Style="{StaticResource ButtonDanger}"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Setter Property="Visibility" Value="Hidden"/>
@@ -88,7 +98,77 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-
+            <TextBlock HorizontalAlignment="Center"
+                       Grid.Row="0"
+                       Style="{StaticResource TextBlockTitleBold}"
+                       Text="{Binding CheckWords.Count, StringFormat=Time to learn! {0} new words for you ^_^}"/>
+            <ItemsControl Grid.Row="1"
+                          Margin="5,15"
+                          ItemsSource="{Binding CheckWords}">
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ScrollViewer>
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="models:CheckWord">
+                            <Border VerticalAlignment="Top"
+                                Margin="15,0,15,15">
+                                <Border.Style>
+                                    <Style TargetType="Border" BasedOn="{StaticResource BorderTipPrimary}">
+                                        <Setter Property="Background" Value="OrangeRed"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource RedBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsChecked}" Value="True">
+                                                <Setter Property="Background" Value="ForestGreen"/>
+                                                <Setter Property="BorderBrush" Value="{StaticResource GreenBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Word}"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="16"
+                                                   Foreground="{StaticResource WhiteBrush}"/>
+                                        <ToggleButton Grid.Column="1"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      Width="35"
+                                                      ToolTip="Confirm"
+                                                      Height="35">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton" BasedOn="{StaticResource ToggleButtonIconTransparent}">
+                                                    <Setter Property="hc:IconElement.Geometry" Value="{StaticResource SuccessGeometry}"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter Property="IsHitTestVisible" Value="False"/>
+                                                        </Trigger>
+                                                        <EventTrigger RoutedEvent="Checked">
+                                                            <SoundPlayerAction Source="../Resources/Sound/confirm.wav"/>
+                                                        </EventTrigger>
+                                            </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                        </ToggleButton>
+                                    </Grid>
+                            </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Grid.Row="2"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource ButtonSuccess}"
+                    Content="I'm ready!"
+                    Command="{Binding ConfirmButtonCommand}"
+                    Width="200"
+                    VerticalAlignment="Center"
+                    Margin="20,5"/>
         </Grid>
     </Grid>
 </hc:Window>

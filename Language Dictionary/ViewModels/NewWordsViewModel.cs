@@ -38,5 +38,16 @@ namespace Language_Dictionary.ViewModels
         public ICommand StartCommand => _startCommand ?? new LambdaCommand(par => IsStarted = true);
 
         #endregion
+
+        #region Confirm button
+
+        private ICommand _confirmButtonCommand;
+
+        public ICommand ConfirmButtonCommand => _confirmButtonCommand ?? new LambdaCommand(par =>
+        {
+            App.ActivedWindow.Close();
+        }, par => CheckWords.All(i => i.IsChecked));
+
+        #endregion
     }
 }

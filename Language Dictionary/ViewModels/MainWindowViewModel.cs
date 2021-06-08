@@ -42,6 +42,16 @@ namespace Language_Dictionary.ViewModels
 
         #endregion
 
+        #region FileInformation : FileInformation - Информация о загруженном файле
+
+        /// <summary>Информация о загруженном файле</summary>
+        private FileInformation _fileInformation;
+
+        /// <summary>Информация о загруженном файле</summary>
+        public FileInformation FileInformation { get => _fileInformation; set => Set(ref _fileInformation, value); }
+
+        #endregion
+
         private readonly BackgroundWorker _worker;
         private readonly FilesHelper _filesHelper;
         private List<string> _worsds;
@@ -51,8 +61,6 @@ namespace Language_Dictionary.ViewModels
 
         public MainWindowViewModel()
         {
-            
-
             _filesHelper = new FilesHelper();
 
             _worker = new BackgroundWorker() { WorkerSupportsCancellation = true };
@@ -158,14 +166,16 @@ namespace Language_Dictionary.ViewModels
                     Growl.Error("Not enough words in file!");
                     return;
                 }
+
+                FileInformation = new FileInformation {Name = SelectedFile.Name, RowsCount = _worsds.Count};
                 State = State.Loaded;
             }
             catch
             {
-                Growl.Error("File upload error!");
+                Growl.Error("File upload error! Try to restart folder.");
             }
 
-        }, (par) => SelectedFile != null);
+        }, (par) => SelectedFile != null && State != State.Started);
 
         #endregion
 
