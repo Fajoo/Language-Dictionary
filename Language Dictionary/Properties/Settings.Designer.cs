@@ -58,5 +58,17 @@ namespace Language_Dictionary.Properties {
                 this["CountWords"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ToRepeatWords {
+            get {
+                return ((bool)(this["ToRepeatWords"]));
+            }
+            set {
+                this["ToRepeatWords"] = value;
+            }
+        }
     }
 }

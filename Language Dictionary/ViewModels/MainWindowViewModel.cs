@@ -57,6 +57,8 @@ namespace Language_Dictionary.ViewModels
         private List<string> _worsds;
         private static readonly Random _r = new Random();
 
+        public ObservableCollection<string> RepeatedWords { get; set; } = new ObservableCollection<string>();
+
         public ObservableCollection<FileInfo> Files { get; set; } = new ObservableCollection<FileInfo>();
 
         public MainWindowViewModel()
@@ -71,7 +73,15 @@ namespace Language_Dictionary.ViewModels
         {
             while (true)
             {
-                for (var i = Settings.DelayMin * 5; i >= 0; i--)
+                if (!Settings.ToRepeatWords)
+                {
+                    _worsds = _worsds.Except(RepeatedWords).ToList();
+
+                    if (_worsds.Count < Settings.CountWords) // ToDo Показать окно с поздравлениями и повтором слов / При повторном запуске слова не загружаются снова 
+                        StopWorkerCommand.Execute(null);
+                }
+
+                for (var i = Settings.DelayMin * 60; i >= 0; i--)
                 {
                     if (_worker.CancellationPending)
                     {
@@ -81,22 +91,38 @@ namespace Language_Dictionary.ViewModels
                     Thread.Sleep(1000);
                 }
 
-                var list = new List<string>();
-
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    for (var i = 0; i < Settings.CountWords; i++)
-                    {
-                        var item = _worsds[_r.Next(0, _worsds.Count)];
-                        if (!(list.Any(s => s.Equals(item))))
-                            list.Add(item);
-                        else i--;
-                    }
+                    var list = RandomList();
 
-                    var window = new NewWordsWindow {DataContext = new NewWordsViewModel(list) };
+                    var context = new NewWordsViewModel(list);
+                    context.CloseSuccess += () =>
+                    {
+                        list.ForEach(item =>
+                        {
+                            if(!(RepeatedWords.Any(i => i.Equals(item))))
+                                RepeatedWords.Add(item);
+                        });
+                    };
+                    var window = new NewWordsWindow {DataContext = context };
                     window.ShowDialog();
                 });
             }
+        }
+
+        private List<string> RandomList()
+        {
+            var list = new List<string>();
+
+            for (var i = 0; i < Settings.CountWords; i++)
+            {
+                var item = _worsds[_r.Next(0, _worsds.Count)];
+                if (!(list.Any(s => s.Equals(item))))
+                    list.Add(item);
+                else i--;
+            }
+
+            return list;
         }
 
         #region Min/Max Window
@@ -201,6 +227,7 @@ namespace Language_Dictionary.ViewModels
         public ICommand StopWorkerCommand => _stopWorkerCommand ?? new LambdaCommand(par =>
         {
             State = State.Loaded;
+            RepeatedWords.Clear();
             _worker.CancelAsync();
         }, par => State == State.Started);
 

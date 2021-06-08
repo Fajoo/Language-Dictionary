@@ -228,6 +228,17 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical"
+                                    Margin="10">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <Border Style="{StaticResource BorderTipPrimary}">
+                                <TextBlock Text="{Binding RepeatedWords.Count, StringFormat=Number of words passed : {0}}"/>
+                            </Border>
+                        </StackPanel>
                         <Button Content="Stop" Margin="10"
                                 Width="200"
                                 HorizontalAlignment="Right"

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -19,6 +20,8 @@ namespace Language_Dictionary.ViewModels
         public bool IsStarted { get => _isStarted; set => Set(ref _isStarted, value); }
 
         #endregion
+
+        public event Action CloseSuccess;
 
         public ObservableCollection<CheckWord> CheckWords { get; set; }
 
@@ -45,6 +48,7 @@ namespace Language_Dictionary.ViewModels
 
         public ICommand ConfirmButtonCommand => _confirmButtonCommand ?? new LambdaCommand(par =>
         {
+            CloseSuccess?.Invoke();
             App.ActivedWindow.Close();
         }, par => CheckWords.All(i => i.IsChecked));
 

@@ -7,5 +7,7 @@
         public static int DelayMin { get; set; }
 
         public static int CountWords { get; set; }
+
+        public static bool ToRepeatWords { get; set; }
     }
 }

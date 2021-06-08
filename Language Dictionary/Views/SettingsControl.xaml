@@ -20,12 +20,17 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Settings"
-                       Margin="5"
-                       HorizontalAlignment="Center"
-                       Style="{StaticResource TextBlockSubTitleBold}"/>
+            <Grid>
+                <TextBlock Text="Settings"
+                           Margin="5"
+                           HorizontalAlignment="Center"
+                           Style="{StaticResource TextBlockSubTitleBold}"/>
+                <Button Style="{StaticResource ButtonIcon}" 
+                        HorizontalAlignment="Right"
+                        Command="hc:ControlCommands.Close"
+                        hc:IconElement.Geometry="{StaticResource CloseGeometry}" />
+            </Grid>
             <hc:Divider Grid.Row="1"
                         Margin="3"/>
             <StackPanel Grid.Row="2"
@@ -42,10 +47,11 @@
                                VerticalAlignment="Center"/>
                     <Button Style="{StaticResource ButtonIcon}" 
                             Grid.Column="1"
+                            ToolTip="Change folder"
                             Command="{Binding NewFolderCommand}"
                             hc:IconElement.Geometry="{StaticResource EyeOpenGeometry}" />
                 </Grid>
-                <hc:NumericUpDown hc:InfoElement.Title="Interval: "
+                <hc:NumericUpDown hc:InfoElement.Title="Interval (min): "
                                   FontWeight="Bold"
                                   Margin="5"
                                   Value="{Binding Path=(s:Settings.DelayMin), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -59,13 +65,16 @@
                                   Minimum="1"
                                   Maximum="20"
                                   Style="{StaticResource NumericUpDownExtend}"/>
+                <StackPanel Margin="5"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                    <TextBlock Text="Repeat words" 
+                               Margin="5"
+                               FontWeight="Bold"/>
+                    <CheckBox Style="{StaticResource ToggleButtonSwitch}"
+                              IsChecked="{Binding Path=(s:Settings.ToRepeatWords), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
             </StackPanel>
-            <Button Content="Save"
-                    Margin="5"
-                    HorizontalAlignment="Right"
-                    Grid.Row="3"
-                    Command="hc:ControlCommands.Close"
-                    Width="100"/>
         </Grid>
    </hc:Card>
 </UserControl>
