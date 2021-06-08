@@ -53,7 +53,7 @@ namespace Language_Dictionary.ViewModels
         #endregion
 
         private readonly BackgroundWorker _worker;
-        private readonly FilesHelper _filesHelper;
+        private FilesHelper _filesHelper;
         private List<string> _worsds;
         private static readonly Random _r = new Random();
 
@@ -121,6 +121,9 @@ namespace Language_Dictionary.ViewModels
 
         public ICommand LoadFilesCommand => _loadFilesCommand ?? new LambdaCommandAsync(async par =>
         {
+            if(_filesHelper.Path != Settings.Folder)
+                _filesHelper = new FilesHelper();
+
             await Task.Run(() =>
             {
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
@@ -200,6 +203,14 @@ namespace Language_Dictionary.ViewModels
             State = State.Loaded;
             _worker.CancelAsync();
         }, par => State == State.Started);
+
+        #endregion
+
+        #region Открыть настройки
+
+        private ICommand _opentSettingsCommand;
+
+        public ICommand OpentSettingsCommand => _opentSettingsCommand ?? new LambdaCommand(par => Dialog.Show(new SettingsControl()), par => State != State.Started);
 
         #endregion
     }

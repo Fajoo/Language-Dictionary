@@ -50,6 +50,12 @@ namespace Language_Dictionary
             base.OnStartup(e);
         }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            SettingsHelper.SetSettings();
+            base.OnExit(e);
+        }
+
         private void CreateNotIcon()
         {
             _notifyIcon.Icon = new Icon("Resources/Img/dictionary.ico");

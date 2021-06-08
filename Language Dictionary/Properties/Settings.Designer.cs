@@ -25,7 +25,7 @@ namespace Language_Dictionary.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\C#\\тренинг\\files")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string Folder {
             get {
                 return ((string)(this["Folder"]));

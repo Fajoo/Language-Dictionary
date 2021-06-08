@@ -7,14 +7,15 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:my="clr-namespace:Language_Dictionary.Models"
         xmlns:viewModels="clr-namespace:Language_Dictionary.ViewModels"
+        xmlns:views="clr-namespace:Language_Dictionary.Views"
         Title="Language Dictionary"
         x:Name="MainWin"
         Icon="../Resources/Img/dictionary.png"
         WindowStartupLocation="CenterScreen"
         FontFamily="Comic Sans MS"
         MinWidth="800"
-        MinHeight="330"
-        Width="800" Height="450" WindowStyle="None">
+        MinHeight="500"
+        Width="800" Height="500" WindowStyle="None">
     <hc:Window.DataContext>
         <viewModels:MainWindowViewModel/>
     </hc:Window.DataContext>
@@ -36,7 +37,7 @@
             </Grid.ColumnDefinitions>
             <Menu>
                 <MenuItem Header="File">
-                    <MenuItem Header="Settings"/>
+                    <MenuItem Header="Settings" Command="{Binding OpentSettingsCommand}"/>
                     <Separator Margin="5,0,5,0"/>
                     <MenuItem Header="Exit" Command="hc:ControlCommands.ShutdownApp"/>
                 </MenuItem>
@@ -100,9 +101,11 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
+
             <Border CornerRadius="8" 
-                        Margin="10"
-                        Background="#1c1c1c">
+                    Margin="10"
+                    Grid.Column="0"
+                    Background="#1c1c1c">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -148,6 +151,7 @@
                                 FontSize="12"
                                 HorizontalAlignment="Stretch"
                                 hc:IconElement.Geometry="{StaticResource DownloadGeometry}"/>
+
                 </Grid>
             </Border>
             <Border CornerRadius="8" 

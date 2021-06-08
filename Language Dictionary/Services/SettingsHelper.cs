@@ -1,4 +1,5 @@
 ﻿using System;
+using HandyControl.Controls;
 using Language_Dictionary.Models;
 
 namespace Language_Dictionary.Services
@@ -7,7 +8,9 @@ namespace Language_Dictionary.Services
     {
         public static void GetSettings()
         {
-            Settings.Folder = Properties.Settings.Default.Folder ?? Environment.CurrentDirectory + "\\Files";
+            Settings.Folder = Properties.Settings.Default.Folder;
+            if(Settings.Folder == "")
+                Settings.Folder = Environment.CurrentDirectory + "\\Files";
             Settings.DelayMin = Properties.Settings.Default.DelayMin;
             if (Settings.DelayMin == 0) Settings.DelayMin = 10;
             Settings.CountWords = Properties.Settings.Default.CountWords;
@@ -19,6 +22,11 @@ namespace Language_Dictionary.Services
             Properties.Settings.Default.Folder = Settings.Folder;
             Properties.Settings.Default.DelayMin = Settings.DelayMin;
             Properties.Settings.Default.CountWords = Settings.CountWords;
+
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Reload();
+
+            Console.WriteLine(Properties.Settings.Default.Folder);
         }
     }
 }

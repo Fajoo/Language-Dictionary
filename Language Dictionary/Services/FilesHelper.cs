@@ -11,6 +11,8 @@ namespace Language_Dictionary.Services
     {
         private readonly DirectoryInfo _directory;
 
+        public string Path => _directory.FullName;
+
         public FilesHelper()
         {
             _directory = new DirectoryInfo(Settings.Folder);

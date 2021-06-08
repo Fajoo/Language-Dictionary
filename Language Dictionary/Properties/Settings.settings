@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Folder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">D:\C#\тренинг\files</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DelayMin" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
