@@ -31,7 +31,7 @@ namespace Language_Dictionary.Services
             while ((line = await streamReader.ReadLineAsync()) != null)
                 list.Add(line);
 
-            return list;
+            return list.Distinct().ToList();
         }
     }
 }

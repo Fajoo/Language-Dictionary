@@ -85,9 +85,11 @@
     <Compile Include="Infrastructure\Commands\Base\CommandAsync.cs" />
     <Compile Include="Infrastructure\Commands\LambdaCommand.cs" />
     <Compile Include="Infrastructure\Commands\LambdaCommandAsync.cs" />
+    <Compile Include="Models\CheckWord.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\State.cs" />
     <Compile Include="Services\FilesHelper.cs" />
+    <Compile Include="Services\SettingsHelper.cs" />
     <Compile Include="ViewModels\Base\ViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\NewWordsViewModel.cs" />

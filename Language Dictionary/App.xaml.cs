@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using Language_Dictionary.Services;
 using Forms = System.Windows.Forms;
 using Window = System.Windows.Window;
 
@@ -35,12 +36,22 @@ namespace Language_Dictionary
         protected override void OnStartup(StartupEventArgs e)
         {
             if (CheckProcess()) Current.Shutdown();
+
+            SettingsHelper.GetSettings();
+
             MainWindow = new MainWindow();
             MainWindow.Closing += MainWindowOnClosing;
             MainWindow.Closed += MainWindowOnClosed;
 
             MainWindow.Show();
 
+            CreateNotIcon();
+
+            base.OnStartup(e);
+        }
+
+        private void CreateNotIcon()
+        {
             _notifyIcon.Icon = new Icon("Resources/Img/lan.ico");
             var contextMenuIcon = _notifyIcon.ContextMenuStrip = new Forms.ContextMenuStrip();
             _notifyIcon.Text = "Language Dictionary";
@@ -49,8 +60,6 @@ namespace Language_Dictionary
             contextMenuIcon.Items.Add("Quit", null, (obj, ev) => App.Current.Shutdown());
             _notifyIcon.Visible = true;
             _notifyIcon.MouseDoubleClick += NotifyIconOnMouseDoubleClick;
-
-            base.OnStartup(e);
         }
 
         private bool CheckProcess()

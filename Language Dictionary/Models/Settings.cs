@@ -4,6 +4,8 @@
     {
         public static string Folder { get; set; }
 
-        public static string DelayMin { get; set; }
+        public static int DelayMin { get; set; }
+
+        public static int CountWords { get; set; }
     }
 }

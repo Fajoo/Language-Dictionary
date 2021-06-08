@@ -1,5 +1,9 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
 using Language_Dictionary.Infrastructure.Commands;
+using Language_Dictionary.Models;
 using Language_Dictionary.ViewModels.Base;
 
 namespace Language_Dictionary.ViewModels
@@ -16,9 +20,15 @@ namespace Language_Dictionary.ViewModels
 
         #endregion
 
-        public NewWordsViewModel()
-        {
+        public ObservableCollection<CheckWord> CheckWords { get; set; }
 
+        public NewWordsViewModel(List<string> words)
+        {
+            CheckWords = new ObservableCollection<CheckWord>(words.Select(i => new CheckWord
+            {
+                Word =  i,
+                IsChecked = false
+            }));
         }
 
         #region Start Command

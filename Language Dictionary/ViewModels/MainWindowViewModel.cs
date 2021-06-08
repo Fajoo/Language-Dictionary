@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -42,14 +44,14 @@ namespace Language_Dictionary.ViewModels
 
         private readonly BackgroundWorker _worker;
         private readonly FilesHelper _filesHelper;
+        private List<string> _worsds;
+        private static readonly Random _r = new Random();
 
         public ObservableCollection<FileInfo> Files { get; set; } = new ObservableCollection<FileInfo>();
 
         public MainWindowViewModel()
         {
-           
-            Settings.Folder =  Environment.CurrentDirectory + "\\Files";
-            Settings.DelayMin = "1";
+            
 
             _filesHelper = new FilesHelper();
 
@@ -61,7 +63,7 @@ namespace Language_Dictionary.ViewModels
         {
             while (true)
             {
-                for (var i = int.Parse(Settings.DelayMin) * 5; i >= 0; i--)
+                for (var i = Settings.DelayMin * 5; i >= 0; i--)
                 {
                     if (_worker.CancellationPending)
                     {
@@ -71,9 +73,19 @@ namespace Language_Dictionary.ViewModels
                     Thread.Sleep(1000);
                 }
 
+                var list = new List<string>();
+
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    var window = new NewWordsWindow {DataContext = new NewWordsViewModel()};
+                    for (var i = 0; i < Settings.CountWords; i++)
+                    {
+                        var item = _worsds[_r.Next(0, _worsds.Count)];
+                        if (!(list.Any(s => s.Equals(item))))
+                            list.Add(item);
+                        else i--;
+                    }
+
+                    var window = new NewWordsWindow {DataContext = new NewWordsViewModel(list) };
                     window.ShowDialog();
                 });
             }
@@ -140,10 +152,10 @@ namespace Language_Dictionary.ViewModels
         {
             try
             {
-                var res = await _filesHelper.GetAllLines(SelectedFile.FullName);
-                if (res.Count == 0)
+                _worsds = await _filesHelper.GetAllLines(SelectedFile.FullName);
+                if (_worsds.Count < Settings.CountWords)
                 {
-                    Growl.Error("File is empty!");
+                    Growl.Error("Not enough words in file!");
                     return;
                 }
                 State = State.Loaded;
