@@ -5,9 +5,237 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Language_Dictionary"
         xmlns:hc="https://handyorg.github.io/handycontrol"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        xmlns:my="clr-namespace:Language_Dictionary.Models"
+        xmlns:viewModels="clr-namespace:Language_Dictionary.ViewModels"
+        Title="Language Dictionary"
+        x:Name="MainWin"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Comic Sans MS"
+        Width="800" Height="450" WindowStyle="None">
+    <hc:Window.DataContext>
+        <viewModels:MainWindowViewModel/>
+    </hc:Window.DataContext>
+    <hc:Interaction.Triggers>
+        <hc:EventTrigger EventName="Loaded">
+            <hc:EventToCommand Command="{Binding LoadFilesCommand}" PassEventArgsToCommand="True"/>
+        </hc:EventTrigger>
+    </hc:Interaction.Triggers>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Background="#1c1c1c">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="Settings"/>
+                    <Separator Margin="5,0,5,0"/>
+                    <MenuItem Header="Exit" Command="hc:ControlCommands.ShutdownApp"/>
+                </MenuItem>
+            </Menu>
+            <ContentControl Grid.Column="1">
+                <hc:Interaction.Triggers>
+                    <hc:EventTrigger EventName="MouseDoubleClick">
+                        <hc:EventToCommand Command="{Binding MinMaxCommand}" 
+                                               PassEventArgsToCommand="True"/>
+                    </hc:EventTrigger>
+                </hc:Interaction.Triggers>
+                <Grid hc:WindowAttach.IsDragElement="True" >
+                    <TextBlock></TextBlock>
+                </Grid>
+            </ContentControl>
+            <StackPanel Grid.Column="2"
+                            Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" x:Key="StyleBuittonIcon" BasedOn="{StaticResource ButtonIcon}" >
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#161616"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Style="{StaticResource StyleBuittonIcon}" 
+                            hc:IconElement.Geometry="{StaticResource WindowMinGeometry}" 
+                            Command="SystemCommands.MinimizeWindowCommand"
+                            Margin="5,0"/>
+                <Button
+                        Command="{Binding MinMaxCommand}"
+                        Margin="5,0">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource StyleBuittonIcon}">
+                            <Setter Property="hc:IconElement.Geometry" Value="{StaticResource WindowMaxGeometry}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=MainWin,Path=WindowState}" Value="Maximized">
+                                    <Setter Property="hc:IconElement.Geometry" Value="{StaticResource WindowRestoreGeometry}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button hc:IconElement.Geometry="{StaticResource CloseGeometry}"
+                            Command="SystemCommands.CloseWindowCommand">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ButtonIcon}" >
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource RedBrush}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Border CornerRadius="8" 
+                        Margin="10"
+                        Background="#1c1c1c">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Vertical">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock HorizontalAlignment="Left"
+                                               Margin="15,5"
+                                               Foreground="{StaticResource WhiteBrush}"
+                                               Text="Dictionaries"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button Style="{StaticResource ButtonIcon}" 
+                                                ToolTip="Refresh"
+                                                Command="{Binding LoadFilesCommand}"
+                                                hc:IconElement.Geometry="{StaticResource RotateLeftGeometry}" />
+                                <Button Style="{StaticResource ButtonIcon}" 
+                                                ToolTip="Open folder"
+                                                Command="{Binding OpentFolderCommand}"
+                                                hc:IconElement.Geometry="{StaticResource DragHorizontalGeometry}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                    <hc:Divider Grid.Row="1" Margin="1"/>
+                    <ListBox Grid.Row="2" 
+                                 BorderThickness="0"
+                                 Foreground="{StaticResource WhiteBrush}"
+                                 ItemsSource="{Binding Files}"
+                                 SelectedItem="{Binding SelectedFile}"
+                                 DisplayMemberPath="Name"
+                                 Margin="5">
+                    </ListBox>
+                    <Button Grid.Row="3" Margin="5"
+                                Style="{StaticResource ButtonPrimary}"
+                                Content="Download"
+                                Command="{Binding LoadFileCommand}"
+                                FontSize="12"
+                                HorizontalAlignment="Stretch"
+                                hc:IconElement.Geometry="{StaticResource DownloadGeometry}"/>
+                </Grid>
+            </Border>
+            <Border CornerRadius="8" 
+                        Margin="10"
+                        Grid.Column="1"
+                        Background="#1c1c1c">
+                <Grid>
+                    <StackPanel Margin="10">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static my:State.None}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <Border Style="{StaticResource BorderTipWarning}">
+                            <TextBlock Text="Waiting for file download"
+                                           Foreground="{StaticResource WhiteBrush}"/>
+                        </Border>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static my:State.Loaded}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical"
+                                        Margin="10">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <Border Style="{StaticResource BorderTipPrimary}">
+                                <TextBlock Text="{Binding SelectedFile.Name, StringFormat=File name : {0}}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderTipPrimary}"
+                                        Margin="0,10">
+                                <TextBlock Text="Loaded rows : 214"/>
+                            </Border>
+                        </StackPanel>
+                        <Button Content="Start" Margin="10"
+                                    Width="200"
+                                    HorizontalAlignment="Right"
+                                    Grid.Row="1"
+                                    Command="{Binding StartWorkerCommand}"
+                                    Style="{StaticResource ButtonSuccess}"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding State}" Value="{x:Static my:State.Started}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Button Content="Stop" Margin="10"
+                                Width="200"
+                                HorizontalAlignment="Right"
+                                Grid.Row="1"
+                                Command="{Binding StopWorkerCommand}"
+                                Style="{StaticResource ButtonDanger}"/>
+                    </Grid>
+
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden" 
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Right">
+                        <StackPanel hc:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </hc:Window>
