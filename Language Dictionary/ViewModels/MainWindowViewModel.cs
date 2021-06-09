@@ -15,6 +15,7 @@ using Language_Dictionary.Models;
 using Language_Dictionary.Properties;
 using Language_Dictionary.Services;
 using Language_Dictionary.ViewModels.Base;
+using Language_Dictionary.ViewModels.Other;
 using Language_Dictionary.Views;
 using Settings = Language_Dictionary.Models.Settings;
 
@@ -61,6 +62,8 @@ namespace Language_Dictionary.ViewModels
 
         public ObservableCollection<FileInfo> Files { get; set; } = new ObservableCollection<FileInfo>();
 
+        public TimerViewModel TimerViewModel { get; set; } = new TimerViewModel();
+
         public MainWindowViewModel()
         {
             _filesHelper = new FilesHelper();
@@ -80,6 +83,8 @@ namespace Language_Dictionary.ViewModels
                     if (_worsds.Count < Settings.CountWords) // ToDo Показать окно с поздравлениями и повтором слов / При повторном запуске слова не загружаются снова 
                         StopWorkerCommand.Execute(null);
                 }
+
+                TimerViewModel.Start();
 
                 for (var i = Settings.DelayMin * 60; i >= 0; i--)
                 {
@@ -107,6 +112,8 @@ namespace Language_Dictionary.ViewModels
                     var window = new NewWordsWindow {DataContext = context };
                     window.ShowDialog();
                 });
+
+                TimerViewModel.Stop();
             }
         }
 
@@ -228,6 +235,7 @@ namespace Language_Dictionary.ViewModels
         {
             State = State.Loaded;
             RepeatedWords.Clear();
+            TimerViewModel.Stop();
             _worker.CancelAsync();
         }, par => State == State.Started);
 

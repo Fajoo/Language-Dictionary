@@ -235,7 +235,15 @@
                                     <Setter Property="Foreground" Value="{StaticResource WhiteBrush}"/>
                                 </Style>
                             </StackPanel.Resources>
-                            <Border Style="{StaticResource BorderTipPrimary}">
+                            <TextBlock Text="{Binding TimerViewModel.NextInMin, StringFormat=Next words in {0} min:}"
+                                       Margin="5"/>
+                            <ProgressBar Style="{StaticResource ProgressBarDefault}"
+                                         Minimum="0"
+                                         Value="{Binding TimerViewModel.Value}"
+                                         Maximum="{Binding TimerViewModel.MaxValue}"
+                                         Margin="5"/>
+                            <Border Style="{StaticResource BorderTipPrimary}"
+                                    Margin="5">
                                 <TextBlock Text="{Binding RepeatedWords.Count, StringFormat=Number of words passed : {0}}"/>
                             </Border>
                         </StackPanel>
