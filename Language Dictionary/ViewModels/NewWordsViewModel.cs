@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Windows.Input;
 using Language_Dictionary.Infrastructure.Commands;
 using Language_Dictionary.Models;
@@ -23,10 +24,15 @@ namespace Language_Dictionary.ViewModels
 
         public event Action CloseSuccess;
 
+        private readonly SpeechSynthesizer _speech;
+
         public ObservableCollection<CheckWord> CheckWords { get; set; }
 
-        public NewWordsViewModel(List<string> words)
+        public NewWordsViewModel(IEnumerable<string> words)
         {
+            _speech = new SpeechSynthesizer();
+            _speech.SelectVoice("Microsoft Zira Desktop");
+
             CheckWords = new ObservableCollection<CheckWord>(words.Select(i => new CheckWord
             {
                 Word =  i,
@@ -39,6 +45,19 @@ namespace Language_Dictionary.ViewModels
         private ICommand _startCommand;
 
         public ICommand StartCommand => _startCommand ?? new LambdaCommand(par => IsStarted = true);
+
+        #endregion
+
+        #region Start Command
+
+        private ICommand _audioCommand;
+
+        public ICommand AudioCommand => _audioCommand ?? new LambdaCommand(par =>
+        {
+            var text = par as string;
+            _speech.SpeakAsyncCancelAll();
+            _speech.SpeakAsync(text ?? string.Empty);
+        });
 
         #endregion
 

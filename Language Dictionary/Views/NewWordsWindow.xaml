@@ -115,7 +115,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="models:CheckWord">
                             <Border VerticalAlignment="Top"
-                                Margin="15,0,15,15">
+                                Margin="15,0,10,15">
                                 <Border.Style>
                                     <Style TargetType="Border" BasedOn="{StaticResource BorderTipPrimary}">
                                         <Setter Property="Background" Value="OrangeRed"/>
@@ -128,16 +128,23 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Border.Style>
-                                <Grid>
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
+                                        <Button Style="{StaticResource ButtonIcon}" 
+                                                ToolTip="Voice"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type hc:Window}}, Path=DataContext.AudioCommand}"
+                                                CommandParameter="{Binding Word}"
+                                                hc:IconElement.Geometry="{StaticResource AudioGeometry}" />
                                         <TextBlock Text="{Binding Word}"
+                                                   Grid.Column="1"
                                                    VerticalAlignment="Center"
                                                    FontSize="16"
                                                    Foreground="{StaticResource WhiteBrush}"/>
-                                        <ToggleButton Grid.Column="1"
+                                        <ToggleButton Grid.Column="2"
                                                       IsChecked="{Binding IsChecked}"
                                                       Width="35"
                                                       ToolTip="Confirm"
@@ -147,7 +154,7 @@
                                                     <Setter Property="hc:IconElement.Geometry" Value="{StaticResource SuccessGeometry}"/>
                                                     <Style.Triggers>
                                                         <Trigger Property="IsChecked" Value="True">
-                                                            <Setter Property="IsHitTestVisible" Value="False"/>
+                                                            <Setter Property="IsEnabled" Value="False"/>
                                                         </Trigger>
                                                         <EventTrigger RoutedEvent="Checked">
                                                             <SoundPlayerAction Source="../Resources/Sound/confirm.wav"/>
@@ -164,11 +171,11 @@
             <Button Grid.Row="2"
                     HorizontalAlignment="Right"
                     Style="{StaticResource ButtonSuccess}"
-                    Content="I'm ready!"
+                    Content="Close"
                     Command="{Binding ConfirmButtonCommand}"
                     Width="200"
                     VerticalAlignment="Center"
-                    Margin="20,5"/>
+                    Margin="15,5"/>
         </Grid>
     </Grid>
 </hc:Window>

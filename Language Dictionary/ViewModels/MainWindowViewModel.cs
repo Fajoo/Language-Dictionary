@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -80,8 +81,11 @@ namespace Language_Dictionary.ViewModels
                 {
                     _worsds = _worsds.Except(RepeatedWords).ToList();
 
-                    if (_worsds.Count < Settings.CountWords) // ToDo Показать окно с поздравлениями и повтором слов / При повторном запуске слова не загружаются снова 
+                    if (_worsds.Count == 0) 
+                    {
+                        Application.Current.Dispatcher.Invoke(() => new CompletionWindow().ShowDialog());
                         StopWorkerCommand.Execute(null);
+                    }
                 }
 
                 TimerViewModel.Start();
@@ -93,7 +97,7 @@ namespace Language_Dictionary.ViewModels
                         e.Cancel = true;
                         return;
                     }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(1000); 
                 }
 
                 Application.Current.Dispatcher.Invoke(() =>
@@ -121,7 +125,12 @@ namespace Language_Dictionary.ViewModels
         {
             var list = new List<string>();
 
-            for (var i = 0; i < Settings.CountWords; i++)
+            var count = Settings.CountWords;
+
+            if (_worsds.Count < count)
+                count = _worsds.Count;
+
+            for (var i = 0; i < count; i++)
             {
                 var item = _worsds[_r.Next(0, _worsds.Count)];
                 if (!(list.Any(s => s.Equals(item))))
@@ -231,11 +240,18 @@ namespace Language_Dictionary.ViewModels
 
         private ICommand _stopWorkerCommand;
 
-        public ICommand StopWorkerCommand => _stopWorkerCommand ?? new LambdaCommand(par =>
+        public ICommand StopWorkerCommand => _stopWorkerCommand ?? new LambdaCommandAsync(async par =>
         {
             State = State.Loaded;
             RepeatedWords.Clear();
             TimerViewModel.Stop();
+
+            if (!Settings.ToRepeatWords)
+            {
+                _worsds.Clear();
+                _worsds = await _filesHelper.GetAllLines(SelectedFile.FullName);
+            }
+
             _worker.CancelAsync();
         }, par => State == State.Started);
 
