@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Language_Dictionary"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:my="clr-namespace:Language_Dictionary.Models"
-        xmlns:viewModels="clr-namespace:Language_Dictionary.ViewModels"
         xmlns:views="clr-namespace:Language_Dictionary.Views"
+        xmlns:viewModels="clr-namespace:Language_Dictionary.ViewModels"
         Title="Language Dictionary"
         x:Name="MainWin"
         Icon="../Resources/Img/dictionary.png"
@@ -17,7 +17,7 @@
         MinHeight="500"
         Width="800" Height="500" WindowStyle="None">
     <hc:Window.DataContext>
-        <viewModels:MainWindowViewModel/>
+       <viewModels:MainWindowViewModel/>
     </hc:Window.DataContext>
     <hc:Interaction.Triggers>
         <hc:EventTrigger EventName="Loaded">
@@ -53,6 +53,19 @@
                     <TextBlock></TextBlock>
                 </Grid>
             </ContentControl>
+            <Image Source="../Resources/Img/coffe.png"
+                   Grid.Column="1"
+                   ToolTip="Support me"
+                   Cursor="Hand"
+                   HorizontalAlignment="Right"
+                   Height="25">
+                <hc:Interaction.Triggers>
+                    <hc:EventTrigger EventName="MouseLeftButtonUp">
+                        <hc:EventToCommand Command="hc:ControlCommands.OpenLink"
+                                           CommandParameter="https://www.buymeacoffee.com/fajo"/>
+                    </hc:EventTrigger>
+                </hc:Interaction.Triggers>
+            </Image>
             <StackPanel Grid.Column="2"
                             Orientation="Horizontal">
                 <StackPanel.Resources>
@@ -146,11 +159,11 @@
                     </ListBox>
                     <Button Grid.Row="3" Margin="5"
                                 Style="{StaticResource ButtonPrimary}"
-                                Content="Download"
+                                Content="Select"
                                 Command="{Binding LoadFileCommand}"
                                 FontSize="12"
                                 HorizontalAlignment="Stretch"
-                                hc:IconElement.Geometry="{StaticResource DownloadGeometry}"/>
+                                hc:IconElement.Geometry="{StaticResource SuccessGeometry}"/>
 
                 </Grid>
             </Border>
